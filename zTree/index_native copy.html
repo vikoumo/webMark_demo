@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>zTree树形结构菜单</title>
+	<!-- import css -->
+	<link rel="stylesheet" href="css/reset.min.css">
+	<style>
+		.container {
+			box-sizing: border-box;
+			margin: 20px auto;
+			padding: 10px;
+			width: 600px;
+			border: 1px dashed #AAA;
+			-webkit-user-select: none;
+		}
+
+		.level {
+			display: none;
+			font-size: 14px;
+			margin-left: 10px;
+		}
+
+		.level.level0 {
+			display: block;
+			margin-left: 0;
+		}
+
+		.level li {
+			position: relative;
+			padding-left: 15px;
+			line-height: 30px;
+		}
+
+		.level li .icon {
+			position: absolute;
+			left: 0;
+			top: 9px;
+			box-sizing: border-box;
+			width: 12px;
+			height: 12px;
+			line-height: 8px;
+			text-align: center;
+			border: 1px solid #AAA;
+			background: #EEE;
+			cursor: pointer;
+		}
+
+		.level li .icon:after {
+			display: block;
+			content: "+";
+			font-size: 12px;
+			font-style: normal;
+		}
+
+		.level li .icon.open:after {
+			content: "-";
+		}
+
+		.level li .title {
+			color: #000;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container" id="container1"></div>
+	<div class="container" id="container2"></div>
+
+	<!-- IMPORT JS -->
+	<!-- <script src="js/ztree.plugin.js"></script> -->
+	<script>
+		// const queryData = () => {
+		// 	return new Promise(resolve => {
+		// 		let xhr = new XMLHttpRequest;
+		// 		xhr.open('GET', './data.json');
+		// 		xhr.onreadystatechange = () => {
+		// 			if (xhr.readyState === 4 && (xhr.status >= 200 && xhr.status < 300)) {
+		// 				let data = JSON.parse(xhr.responseText);
+		// 				resolve(data);
+		// 			}
+		// 		};
+		// 		xhr.send(null);
+		// 	});
+		// };
+		// (async function () {
+		// 	const data = await queryData();
+
+		// 	let container1 = document.querySelector('#container1'),
+		// 		container2 = document.querySelector('#container2');
+		// 	new zTree(container1, {
+		// 		//data:data
+		// 		data
+		// 	});
+		// 	new zTree({
+		// 		element: container2,
+		// 		data,
+		// 		callback(self, em, ul) {
+		// 			console.log(self, em, ul);
+		// 		}
+		// 	});
+		// })();
+	</script>
+
+	<script src="js/ztree.js"></script>
+
+	<script>
+		/*
+		 * JQ版插件:
+		 * $(xxx).zTree([data],[callback])
+		 * 
+		 * 原生JS版插件：
+		 * new zTree([element],[options])
+		 * new zTree([options])
+		 * 
+		 * options:
+		 *   element:[dom]
+		 *   data:[array]
+		 *   callback:[function->self/em/ul...]
+		 * 
+		 * 生命周期函数进阶：
+		 *   self.on/off([func])
+		 */
+	</script>
+</body>
+
+</html>

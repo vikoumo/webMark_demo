@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于JS实现拖拽效果</title>
+    <link rel="stylesheet" href="css/reset.min.css">
+    <style>
+        html,
+        body {
+            height: 400%;
+            background: -webkit-linear-gradient(top left, lightblue, orange);
+        }
+
+        .box {
+            position: fixed;
+            top: 100px;
+            left: 200px;
+            width: 100px;
+            height: 100px;
+            background: lightcoral;
+            cursor: move;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+
+    <script>
+        // 第一版：鼠标移动过快，计算盒子位子的程序跟不上处理，到时鼠标移出盒子，从而引发一系列问题
+
+        // 获取当前元素和四个边界值
+        /* let box = document.querySelector('.box'),
+            HTML = document.documentElement,
+            minL = 0,
+            minT = 0,
+            maxL = HTML.clientWidth - box.offsetWidth,
+            maxT = HTML.clientHeight - box.offsetHeight;
+
+        // 鼠标按下开始拖拽
+        const down = function down(ev) {
+            // 记录鼠标开始位置和盒子的开始位置:这些信息未来会在鼠标移动的方法中使用(把信息挂在到盒子的自定义属性上,后期在其他的方法中只要获取到当前盒子,就可以获取到记录的这些开始信息了)
+            // this -> box
+            let {
+                top,
+                left
+            } = this.getBoundingClientRect();
+            this.startT = top;
+            this.startL = left;
+            this.startX = ev.clientX;
+            this.startY = ev.clientY;
+
+            // 鼠标按下才进行事件绑定(拖拽开始)
+            this.addEventListener('mousemove', move);
+            this.addEventListener('mouseup', up);
+        };
+
+        // 鼠标移动拖拽中
+        const move = function move(ev) {
+            // this -> box
+            // 获取盒子当前的位置
+            let curL = ev.clientX - this.startX + this.startL,
+                curT = ev.clientY - this.startY + this.startT;
+            // 边界判断
+            curL = curL < minL ? minL : (curL > maxL ? maxL : curL);
+            curT = curT < minT ? minT : (curT > maxT ? maxT : curT);
+            // 修改样式
+            this.style.left = `${curL}px`;
+            this.style.top = `${curT}px`;
+        };
+
+        // 鼠标抬起拖拽结束
+        const up = function up(ev) {
+            // this -> box
+            // 移除事件绑定来结束拖拽
+            this.removeEventListener('mousemove', move);
+            this.removeEventListener('mouseup', up);
+        };
+
+        box.addEventListener('mousedown', down); */
+    </script>
+
+    <script>
+        // 解决鼠标焦点丢失问题
+        //   + IE/火狐：把盒子和鼠标绑定在一起
+        //     + setCapture
+        //     + releaseCapture
+        //   + 谷歌：猴子不管蹦哒的多欢，永远也逃离不出如来佛祖的五指山
+        //     + 所有的原因是因为鼠标不在盒子上了，很多事件触发不了
+        //     + 鼠标不管移动多快，也逃离不出去浏览器，所以mousemove/mouseup都绑定给window
+
+        let box = document.querySelector('.box'),
+            HTML = document.documentElement,
+            minL = 0,
+            minT = 0,
+            maxL = HTML.clientWidth - box.offsetWidth,
+            maxT = HTML.clientHeight - box.offsetHeight;
+
+        const down = function down(ev) {
+            // this -> box
+            let {
+                top,
+                left
+            } = this.getBoundingClientRect();
+            this.startT = top;
+            this.startL = left;
+            this.startX = ev.clientX;
+            this.startY = ev.clientY;
+
+            // 注意：保证move/up中的this是盒子 并且 还要考虑好移除的时候如何移除
+            this._move = move.bind(this);
+            this._up = up.bind(this);
+            window.addEventListener('mousemove', this._move);
+            window.addEventListener('mouseup', this._up);
+        };
+
+        const move = function move(ev) {
+            // this -> box
+            let curL = ev.clientX - this.startX + this.startL,
+                curT = ev.clientY - this.startY + this.startT;
+            curL = curL < minL ? minL : (curL > maxL ? maxL : curL);
+            curT = curT < minT ? minT : (curT > maxT ? maxT : curT);
+            this.style.left = `${curL}px`;
+            this.style.top = `${curT}px`;
+        };
+
+        const up = function up(ev) {
+            // this -> box
+            window.removeEventListener('mousemove', this._move);
+            window.removeEventListener('mouseup', this._up);
+        };
+
+        box.addEventListener('mousedown', down);
+
+        // HTML5中内置的拖拽事件：把目标元素拖拽到指定的区域中
+        // https://developer.mozilla.org/zh-CN/docs/Web/API/Document/dragstart_event
+    </script>
+</body>
+
+</html>

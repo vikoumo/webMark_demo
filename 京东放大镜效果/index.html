@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京东放大镜效果</title>
+
+    <link rel="stylesheet" href="css/reset.min.css">
+    <style>
+        .magnifier {
+            margin: 20px auto;
+            width: 500px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .magnifier .abbre {
+            position: relative;
+            box-sizing: border-box;
+            width: 200px;
+            height: 200px;
+        }
+
+        .magnifier .abbre img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .magnifier .abbre .mark {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 0, 0, .4);
+            cursor: move;
+        }
+
+        .magnifier .detail {
+            display: none;
+            position: relative;
+            box-sizing: border-box;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .magnifier .detail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="magnifier">
+        <!-- 缩略图 -->
+        <div class="abbre">
+            <img src="images/1.jpg" alt="">
+
+            <!-- MARK遮罩层 -->
+            <div class="mark"></div>
+        </div>
+
+        <!-- 详情图 -->
+        <div class="detail">
+            <img src="images/2.jpg" alt="">
+        </div>
+    </section>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

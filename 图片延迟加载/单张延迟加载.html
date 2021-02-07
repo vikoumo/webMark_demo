@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单张延迟加载</title>
+    <!-- IMPORT CSS -->
+    <link rel="stylesheet" href="css/reset.min.css">
+    <style>
+        html,
+        body {
+            height: 300%;
+        }
+
+        .lazyImageBox {
+            position: absolute;
+            left: 50%; 
+            top: 1500px;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 300px;
+            background: url("./images/default.gif") no-repeat center center #EEE;
+        }
+
+        .lazyImageBox img {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity .3s;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+        图片延迟加载的意义：
+          项目中，如果一开始加载页面，就把所有的真实图片也去加载，不论是从网络消耗上，
+          还是从页面渲染上都是非常的消耗性能的，导致加载过慢... 真实开发中，
+          我们一般首次渲染，不去渲染真实的图片，把图片部分用一个默认的盒子占位
+          （有默认的背景图，给用户一种感觉：图片正在加载中）
+        把能够出现在当前视口中的图片（它所在的那个占位盒子出现在视口中）做加载
+     -->
+    <div class="lazyImageBox">
+        <img src="" alt="" lazy-image="images/12.jpg">
+    </div>
+
+    <!-- IMPORT JS -->
+    <script>
+        let lazyImageBox = document.querySelector('.lazyImageBox'),
+            lazyImage = lazyImageBox.querySelector('img');
+        const singleLazy = function singleLazy() {
+            let trueImg = lazyImage.getAttribute('lazy-image');
+            lazyImage.src = trueImg;
+            lazyImage.onload = () => {
+                lazyImage.style.opacity = 1;
+            };
+        };
+        // 使用DOM监听器 IntersectionObserver:监听一个或者多个DOM元素和可视窗口的交叉信息
+        let ob = new IntersectionObserver(changes => {
+            // changes是一个数组，包含所有监听的DOM元素和视口的交叉信息
+            let item = changes[0],
+                {
+                    isIntersecting,
+                    target
+                } = item;
+            if (isIntersecting) {
+                // 完全出现在视口中了
+                singleLazy();
+                ob.unobserve(lazyImageBox); //加载真实图片后，移除对盒子的监听
+            }
+        }, {
+            threshold: [1]
+        });
+        ob.observe(lazyImageBox);
+        // ob.observe(lazyImageBox); //默认监听的时候是去重的
+    </script>
+    <script>
+        /*
+        function throttle(func, wait = 500) {
+            let timer = null,
+                previous = 0;
+            return function anonymous(...params) {
+                let now = new Date(),
+                    remaining = wait - (now - previous);
+                if (remaining <= 0) {
+                    clearTimeout(timer);
+                    timer = null;
+                    previous = now;
+                    func.call(this, ...params);
+                } else if (!timer) {
+                    timer = setTimeout(() => {
+                        clearTimeout(timer);
+                        timer = null;
+                        previous = new Date();
+                        func.call(this, ...params);
+                    }, remaining);
+                }
+            };
+        }
+
+        let lazyImageBox = document.querySelector('.lazyImageBox'),
+            lazyImage = lazyImageBox.querySelector('img');
+
+        const singleLazy = function singleLazy() {
+            let trueImg = lazyImage.getAttribute('lazy-image');
+            lazyImage.src = trueImg;
+            lazyImage.onload = () => {
+                // 真实图片加载成功
+                lazyImage.style.opacity = 1;
+            };
+            lazyImageBox.isLoad = true;
+        };
+
+        const lazyFunc = function lazyFunc() {
+            console.log('OK');
+            // 防止重复处理
+            if (lazyImageBox.isLoad) return;
+            let A = lazyImageBox.getBoundingClientRect().bottom,
+                B = document.documentElement.clientHeight;
+            if (A <= B) {
+                singleLazy();
+            }
+        };
+
+        setTimeout(lazyFunc, 1000);
+        // window.onscroll = lazyFunc; //默认浏览器会在最快的反应时间内，监听到scroll事件的触发，从而执行lazyFunc这个方法，这样导致触发频率太高了 -> 节流处理
+        window.onscroll = throttle(lazyFunc);
+        */
+    </script>
+</body>
+
+</html>

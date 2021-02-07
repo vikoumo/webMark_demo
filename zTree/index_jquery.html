@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>zTree树形结构菜单</title>
+    <!-- import css -->
+    <link rel="stylesheet" href="css/reset.min.css">
+    <style>
+        .container {
+            box-sizing: border-box;
+            margin: 20px auto;
+            padding: 10px;
+            width: 600px;
+            border: 1px dashed #AAA;
+            -webkit-user-select: none;
+        }
+
+        .level {
+            display: none;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .level.level0 {
+            display: block;
+            margin-left: 0;
+        }
+
+        .level li {
+            position: relative;
+            padding-left: 15px;
+            line-height: 30px;
+        }
+
+        .level li .icon {
+            position: absolute;
+            left: 0;
+            top: 9px;
+            box-sizing: border-box;
+            width: 12px;
+            height: 12px;
+            line-height: 8px;
+            text-align: center;
+            border: 1px solid #AAA;
+            background: #EEE;
+            cursor: pointer;
+        }
+
+        .level li .icon:after {
+            display: block;
+            content: "+";
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        .level li .icon.open:after {
+            content: "-";
+        }
+
+        .level li .title {
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container1">
+        <!-- <ul class="level level0">
+			<li>
+				<a href="#" class="title">前端开发基础</a>
+				<em class="icon open"></em>
+				<ul class="level level1" style="display:block">
+					<li><a href="#" class="title">1-1-1</a></li>
+					<li>
+						<a href="#" class="title">1-1-2</a>
+						<em class="icon"></em>
+						<ul class="level level2" style="display: block;">
+
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#" class="title">全栈开发知识</a>
+			</li>
+		</ul> -->
+    </div>
+    <div class="container" id="container2"></div>
+
+    <!-- IMPORT JS -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/ztree_jquery.js"></script>
+    <script>
+        // 自己从服务器获取数据
+        const queryData = () => {
+            return new Promise(resolve => {
+                let xhr = new XMLHttpRequest;
+                xhr.open('GET', './data.json');
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4 && (xhr.status >= 200 && xhr.status < 300)) {
+                        let data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                };
+                xhr.send(null);
+            });
+        };
+
+        // 获取数据后调取插件：实现树形结构菜单
+        (async function () {
+            const data = await queryData();
+            $('#container1').zTree(data);
+            $('#container2').zTree(data, (em, ul) => {
+                console.log(em, ul);
+            });
+        })();
+    </script>
+</body>
+
+</html>
