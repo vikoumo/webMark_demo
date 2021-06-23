@@ -1,0 +1,18 @@
+html,
+body {
+	background: #D6D7DB;
+}
+
+.container {
+	box-sizing: border-box;
+	margin: 20px auto;
+	width: 760px;
+	height: 400px;
+	overflow: scroll;
+}
+.container li {
+	height: 100px;
+}
+.container li + li {
+	border-top: 1px solid black;
+}

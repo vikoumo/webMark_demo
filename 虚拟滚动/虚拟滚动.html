@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+	<title>虚拟滚动</title>
+
+	<!-- IMPORT CSS -->
+	<link rel="stylesheet" href="css/reset.min.css">
+	<link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+	<div class="container clearfix">
+		<ul>
+			<!-- <li>
+				<p>泰勒·斯威夫特（Taylor Swift），1989年12月13日出生于美国宾州，美国歌手、演员。2006年出道，同年发行专辑《泰勒·斯威夫特》，该专辑获得美国唱片业协会的白金唱片认证</p>
+			</li> -->
+		</ul>
+	</div>
+
+	<!-- IMPORT JS -->
+	<script src="lib/axios.min.js"></script>
+	<script src="lib/virscroll.js"></script>
+	<script>
+		const view = document.getElementsByClassName('container')[0];
+		function itemElementGenerator ({item}) {
+			const node = document.createElement('li');
+			const {title, id} = item
+			node.innerHTML = id + title
+			return node
+		}
+		axios.get('./data.json').then(({data}) => {
+			const virscrollData = {
+				el:	view,
+				list:	data,
+				itemHeight: 100,
+				cacheCount: 2,
+				itemElementGenerator,
+			};
+			const virscroll = new VirtualScroll(virscrollData);
+		})
+		
+	</script>
+</body>
+
+</html>
